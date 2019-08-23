@@ -26,9 +26,33 @@
   }
 }
 button:disabled {
-  background: #6d9ab7;
+  background: #aab6be;
   cursor: not-allowed;
   &:hover {
     background: #6d9ab7;
+  }
+}
+input {
+  padding: 8px 10px;
+}
+
+/* ===========================================
+    Dashboard
+  ============================================ */
+
+table {
+  margin: 50px auto;
+  padding: 20px;
+  thead {
+    background: rgb(35, 133, 173);
+    color: #fff;
+  }
+  td {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  tbody{
+    background-color: #e7d7d7;
   }
 }

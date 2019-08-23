@@ -4,13 +4,14 @@ import { editProduct } from "../actions/action";
 
 class EditPage extends Component {
   state = {
-    name: "",
+    name: this.props.products[this.props.productId].name,
     weight: "",
     availability: "",
     productUrl: "",
-    pricingTier: "",
+    priceTier: "",
     priceRange: "",
-    isEditable: false
+    priceRangeArr: null,
+    isEditable: true
   };
 
   handleChange = ({ target: { value, name } }) => {
@@ -25,23 +26,53 @@ class EditPage extends Component {
     });
   };
 
+  setDataToState = editableData => {
+    this.setState({
+      name: editableData.name,
+      weight: editableData.weight,
+      availability: editableData.availability
+    });
+  };
+
+  handlePriceTier = e => {
+    if (e.target.value === "budget") {
+      this.setState({
+        priceTier: "budget",
+        priceRangeArr: ["A. 4k-6k", "B. 6k-9k", "C. 9k-11k"]
+      });
+    } else {
+      this.setState({
+        priceTier: "premier",
+        priceRangeArr: ["A. 11k-20k", "B. 20k-30k", "C. 30k+"]
+      });
+    }
+  };
+
+  handlePriceRange = e => {
+    const value = e.target.value.split(" ")[1];
+    this.setState({
+      priceRange: value
+    });
+  };
+
   handleSubmit = () => {
-    const { id } = this.props.location;
+    const id = this.props.productId;
     const data = { ...this.state, id };
-    this.props.dispatch(
-      editProduct(data, success => {
-        if (success) {
-          this.props.history.push("/");
-        }
-      })
-    );
+    this.props.dispatch(editProduct(data));
+    this.props.history.push("/");
   };
 
   render() {
-    const { priceInfo } = this.props;
-    const { name, weight, productUrl, pricingTier, priceRange } = this.state;
-    const prices = pricingTier ? priceInfo[pricingTier] : "";
-    var toggle = name && weight && productUrl;
+    const {
+      name,
+      weight,
+      productUrl,
+      priceTier,
+      priceRangeArr,
+      priceRange,
+      availability
+    } = this.state;
+    var toggle = name && weight && productUrl && priceTier && priceRange;
     return (
       <div className="container">
         <form className="edit-form">
@@ -50,6 +81,7 @@ class EditPage extends Component {
             <input
               type="text"
               name="name"
+              value={name}
               onChange={this.handleChange}
               required
             />
@@ -57,6 +89,7 @@ class EditPage extends Component {
             <input
               type="text"
               name="weight"
+              value={weight}
               onChange={this.handleChange}
               required
             />
@@ -64,6 +97,7 @@ class EditPage extends Component {
             <input
               type="number"
               name="availability"
+              value={availability}
               onChange={this.handleChange}
             />
             <label>Product URL*</label>
@@ -81,7 +115,7 @@ class EditPage extends Component {
                   name="pricingTier"
                   value="budget"
                   id="budget"
-                  onChange={this.handleChange}
+                  onChange={this.handlePriceTier}
                 />
                 budget
               </label>
@@ -91,17 +125,17 @@ class EditPage extends Component {
                   name="pricingTier"
                   value="premier"
                   id="premier"
-                  onChange={this.handleChange}
+                  onChange={this.handlePriceTier}
                 />
                 premier
               </label>
             </label>
             <label>Price Range*</label>
 
-            <select name="priceRange" id="" onChange={this.handleChange}>
-              <option>Select Price</option>
-              {prices
-                ? prices.map((price, index) => {
+            <select name="priceRange" onChange={this.handlePriceRange} required>
+              <option value="">Select Price</option>
+              {priceRangeArr
+                ? priceRangeArr.map((price, index) => {
                     return (
                       <option key={index} value={price}>
                         {price}
@@ -110,11 +144,10 @@ class EditPage extends Component {
                   })
                 : ""}
             </select>
-            <label>isEditable*</label>
+            <label>is Editable</label>
             <input
               type="checkbox"
               name="isEditable"
-              id=""
               onChange={this.handleEditable}
             />
           </div>
@@ -135,7 +168,9 @@ class EditPage extends Component {
 
 const mapStateToProps = state => {
   return {
-    priceInfo: state.priceInfo
+    products: state.products,
+    priceInfo: state.priceInfo,
+    productId: state ? state.productId : null
   };
 };
 
