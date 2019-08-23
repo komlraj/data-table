@@ -41,87 +41,92 @@ class EditPage extends Component {
     const { priceInfo } = this.props;
     const { name, weight, productUrl, pricingTier, priceRange } = this.state;
     const prices = pricingTier ? priceInfo[pricingTier] : "";
-
+    var toggle = name && weight && productUrl;
     return (
-      <div>
-        <form>
-          <label>Name*</label>
-          <input
-            type="text"
-            name="name"
-            onChange={this.handleChange}
-            required
-          />
-          <label>Weight*</label>
-          <input
-            type="text"
-            name="weight"
-            onChange={this.handleChange}
-            required
-          />
-          <label>Availability</label>
-          <input
-            type="number"
-            name="availability"
-            onChange={this.handleChange}
-          />
-          <label>Product URL*</label>
-          <input
-            type="text"
-            name="productUrl"
-            onChange={this.handleChange}
-            required
-          />
-          <label>Price Tier*</label>
-          <label htmlFor="">
+      <div className="container">
+        <form className="edit-form">
+          <div className="edit-form-inner">
+            <label>Name*</label>
             <input
-              type="radio"
-              name="pricingTier"
-              value="budget"
-              id=""
+              type="text"
+              name="name"
+              onChange={this.handleChange}
+              required
+            />
+            <label>Weight*</label>
+            <input
+              type="text"
+              name="weight"
+              onChange={this.handleChange}
+              required
+            />
+            <label>Availability</label>
+            <input
+              type="number"
+              name="availability"
               onChange={this.handleChange}
             />
-            budget
-          </label>
-          <label htmlFor="">
+            <label>Product URL*</label>
             <input
-              type="radio"
-              name="pricingTier"
-              value="premier"
-              id=""
+              type="text"
+              name="productUrl"
               onChange={this.handleChange}
+              required
             />
-            premier
-          </label>
-          <label>Price Range*</label>
+            <label>Price Tier*</label>
+            <label>
+              <label htmlFor="budget">
+                <input
+                  type="radio"
+                  name="pricingTier"
+                  value="budget"
+                  id="budget"
+                  onChange={this.handleChange}
+                />
+                budget
+              </label>
+              <label htmlFor="premier">
+                <input
+                  type="radio"
+                  name="pricingTier"
+                  value="premier"
+                  id="premier"
+                  onChange={this.handleChange}
+                />
+                premier
+              </label>
+            </label>
+            <label>Price Range*</label>
 
-          <select name="priceRange" id="" onChange={this.handleChange}>
-            <option>Select Price</option>
-            {prices
-              ? prices.map((price, index) => {
-                  return (
-                    <option key={index} value={price} required>
-                      {price}
-                    </option>
-                  );
-                })
-              : ""}
-          </select>
-          <label>isEditable*</label>
-          <input
-            type="checkbox"
-            name="isEditable"
-            id=""
-            onChange={this.handleEditable}
-            required
-          />
+            <select name="priceRange" id="" onChange={this.handleChange}>
+              <option>Select Price</option>
+              {prices
+                ? prices.map((price, index) => {
+                    return (
+                      <option key={index} value={price}>
+                        {price}
+                      </option>
+                    );
+                  })
+                : ""}
+            </select>
+            <label>isEditable*</label>
+            <input
+              type="checkbox"
+              name="isEditable"
+              id=""
+              onChange={this.handleEditable}
+            />
+          </div>
         </form>
-        <div>
-          {name && weight && productUrl && pricingTier && priceRange ? (
-            <button onClick={this.handleSubmit}>Submit</button>
-          ) : (
-            ""
-          )}
+        <div className="center">
+          <button
+            className="btn"
+            onClick={this.handleSubmit}
+            disabled={!toggle}
+          >
+            Submit
+          </button>
         </div>
       </div>
     );
